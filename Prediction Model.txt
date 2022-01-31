@@ -1,0 +1,35 @@
+Importing dataset in r studio to use it in reading the data set
+#Load the file
+dataset <- read.csv("C:/Users/ADITYA/Desktop/clg/Credit score data set.csv", stringsAsFactors = T)
+str(dataset)
+#Treatment of Missing Value
+library(DMwR)
+dataset1=knnImputation(dataset, k=10,meth = "mode")
+#Encoding the Data
+dataset1$Sex=factor(dataset1$Sex,
+ levels = c("male","female"),
+ labels = c(1,2))
+dataset1$Job=factor(dataset1$Job,
+ levels = c("0","1","2","3"),
+ labels = c(0,1,2,3))
+dataset1$Housing=factor(dataset1$Housing,
+ levels = c("free","own","rent"),
+ labels = c(1,2,3))
+dataset1$Saving.accounts=factor(dataset1$Saving.accounts,
+ levels = c("little","moderate","rich","quite rich"),
+ labels = c(1,2,3,4))
+dataset1$Checking.account=factor(dataset1$Checking.account,
+ levels = c("little","moderate","rich"),
+ labels = c(1,2,3))
+dataset1$Purpose=factor(dataset1$Purpose,
+ levels = c("business","domestic appliances","education","furniture/equipment", "radio/TV", 
+"vacation/other", "repairs", "car"),
+ labels = c(1,2,3,4,5,6,7,8))
+dataset2=dataset1[2:10]
+# Setting an optimal model with the help of backward stepwise Regression 
+# Linear Regression
+linreg= lm(formula = Credit.amount ~ ., data = dataset2)
+summary(linreg)
+#drop the variable checking account as p value >0.05
+newlinreg1=lm(formula = Credit.amount ~ Job+Duration-1, data = dataset2)
+summary(newlinreg1)
